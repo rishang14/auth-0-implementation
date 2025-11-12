@@ -18,15 +18,16 @@ export default function Profile() {
   }
 
   return (
-    <div className="profile-card action-card">
+    <div className="">
       {user.picture && (
         <img
           src={user.picture}
           alt={user.name || 'User profile'}
           className="profile-picture"
         />
-      )}
-      <h2 className="profile-name">{user.name}</h2>
+      )} 
+
+      <h2 className="w-[110px] h-[110px] rounded-[50%] transform-[0.3s] ease-in-out object-cover ">{user.name}</h2>
       <p className="profile-email">{user.email}</p>
     </div>
   );

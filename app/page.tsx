@@ -8,32 +8,15 @@ export default async function Home() {
   const user = session?.user;
 
   return (
-    <div className="app-container">
-      <div className="main-card-wrapper">
-        <img
-          src="https://cdn.auth0.com/website/auth0-logo-dark.svg"
-          alt="Auth0 Logo"
-          className="auth0-logo"
-        />
-        <h1 className="main-title">Next.js + Auth0</h1>
-        
-        <div className="action-card">
-          {user ? (
-            <div className="logged-in-section">
-              <p className="logged-in-message">✅ Successfully logged in!</p>
-              <Profile />
-              <LogoutButton />
-            </div>
-          ) : (
-            <>
-              <p className="action-text">
-                Welcome! Please log in to access your protected content.
-              </p>
-              <LoginButton />
-            </>
-          )}
-        </div>
-      </div>
+    <div className="h-screen flex items-center flex-col justify-center w-full">
+      <h1 className="mb-4 md:text-2xl text-xl font-extrabold leading-none tracking-tight text-gray-900  dark:text-white">
+        Welcome! Please log in to access your protected content.
+      </h1>
+      <LoginButton />  
+
+      {
+        user && <LogoutButton/>
+      }
     </div>
   );
 }

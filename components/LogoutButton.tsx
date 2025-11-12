@@ -3,7 +3,7 @@
 export default function LogoutButton() {
   return (
     <a
-      href="/docs/auth/logout"
+      href="/auth/logout"
       className="button logout"
     >
       Log Out

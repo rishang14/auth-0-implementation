@@ -1,12 +1,14 @@
 "use client";
 
+import Link from "next/link";
+
 export default function LoginButton() {
   return (
-    <a
+    <Link
       href="/auth/login"
-      className="button login"
+      className="text-white bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
     >
       Log In
-    </a>
+    </Link>
   );
 }
