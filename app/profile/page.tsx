@@ -1,5 +1,6 @@
 import { auth0 } from "@/lib/auth0";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -40,9 +41,12 @@ const Profile = async () => {
           </div>
 
           <div className="p-4 border-t mx-8 mt-2">
-            <button className="w-1/2 block mx-auto rounded-full cursor-pointer bg-slate-700 hover:shadow-lg font-semibold text-white px-6 py-2">
+            <Link
+              href={"/logout"}
+              className="w-1/2 block mx-auto text-center rounded-full cursor-pointer bg-slate-700 hover:shadow-lg font-semibold text-white px-6 py-2"
+            >
               Log Out
-            </button>
+            </Link>
           </div>
         </div>
       </div>

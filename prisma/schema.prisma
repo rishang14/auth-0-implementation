@@ -31,7 +31,7 @@ model User {
 model Session {
   id        String   @id @default(cuid())
   userId    String
-  deviceId  String
+  deviceId  String  @unique
   userAgent String?
   ipAddress String?
   status    Status   

@@ -1,6 +1,5 @@
 import { auth0 } from "@/lib/auth0";
 import LoginButton from "@/components/LoginButton";
-import LogoutButton from "@/components/LogoutButton";
 import { redirect } from "next/navigation";
 
 export default async function Home() {

@@ -7,30 +7,35 @@ import { redirect } from "next/navigation";
 
 export const checkPage=async()=>{
      const session = await auth0.getSession();
-  const randomId = uuidv4(); // random id
+  const randomId = uuidv4(); // random id  
+
+console.log("i am triggreded")
   const cookiestore = await cookies();
   if (!session?.user) {
     return redirect("/");
   }
-
+  console.log(session.user,"sssion in checkpage")
+  if(!session?.user.email || !session?.user.name)return;
   const usreExist = await prisma.user.findUnique({
     where: { email: session?.user.email },
   });
-
+   
   cookiestore.set({
     name: "deviceId",
     value: randomId,
   });
 
   if (!usreExist) {
- await prisma.user.create({
+ const  usercreated=await prisma.user.create({
       data: {
-        name: session.user.name ?? "",
-        email: session.user.email ?? " ",
+        name: session.user.name ,
+        email: session.user.email ,
         verified: session.user.email_verified ?? false,
         auth0Id: session.user.sub,
       },
-    });
+    }); 
+
+    console.log("user created",usercreated); 
     return redirect("/completeprofile");
   }
   

@@ -38,7 +38,7 @@ export const updatePhoneNo = async (number: number) => {
         });
       }
     }
-    return { success: true, message: "No updated Successfully" };
+    return { success: true, message: "Phone-no updated Successfully" };
   } catch (error) {
     console.log(error);
     return { success: false, error: "Internal Server Error" };

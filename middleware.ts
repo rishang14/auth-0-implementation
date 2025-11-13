@@ -1,9 +1,17 @@
 
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { auth0 } from "./lib/auth0";
 
 export async function middleware(request: NextRequest) {
-  return await auth0.middleware(request);
+  const authres=  await auth0.middleware(request);  
+
+  
+  // if(request.nextUrl.pathname === "/auth/logout"){
+  //    return NextResponse.redirect(new URL("/logout", request.url));
+  // }
+
+
+  return authres;
 }
 
 export const config= {
