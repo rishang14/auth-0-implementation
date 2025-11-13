@@ -34,7 +34,8 @@ model Session {
   deviceId  String  @unique
   userAgent String?
   ipAddress String?
-  status    Status   
+  status    Status    
+  forecedreason  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

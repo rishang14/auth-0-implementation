@@ -4,20 +4,23 @@ import { auth0 } from "../auth0";
 import prisma from "../prisma"; 
 import { cookies} from "next/headers"; 
 import { redirect } from "next/navigation";
+  
 
 export const checkPage=async()=>{
      const session = await auth0.getSession();
   const randomId = uuidv4(); // random id  
 
-console.log("i am triggreded")
   const cookiestore = await cookies();
   if (!session?.user) {
     return redirect("/");
   }
-  console.log(session.user,"sssion in checkpage")
+  
   if(!session?.user.email || !session?.user.name)return;
   const usreExist = await prisma.user.findUnique({
-    where: { email: session?.user.email },
+    where: { email: session?.user.email }, 
+    include:{
+      sessions:true
+    }
   });
    
   cookiestore.set({
@@ -35,9 +38,18 @@ console.log("i am triggreded")
       },
     }); 
 
-    console.log("user created",usercreated); 
     return redirect("/completeprofile");
+  }   
+  
+  if(usreExist.sessions){
+    const getActiveSession= usreExist.sessions.filter(s => s.status === "LogIn"); 
+
+    if(getActiveSession.length >=3){
+      return redirect(`/logoutolddevice?newDeviceId=${randomId}`);
+    }
   }
+
+
   
 const sessionCreated=await prisma.session.create({
     data: {
@@ -46,8 +58,6 @@ const sessionCreated=await prisma.session.create({
       status: "LogIn",
     }, 
   }); 
-
-  console.log("Created Sessiom In the Check",sessionCreated);
 
   return redirect("/profile");
 }
