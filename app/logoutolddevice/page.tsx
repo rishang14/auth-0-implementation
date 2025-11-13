@@ -24,8 +24,8 @@ const LogoutOthersDevice = async ({ searchParams }: Props) => {
     },
   });
 
-  const activeSession = user?.sessions.filter((s) => s.status === "LogIn");
-
+  const activeSession = user?.sessions.filter(s => s.status === "LogIn");
+  const {newDeviceId}= await searchParams
   return (
     <div className="min-h-screen bg-linear-to-br from-background to-muted/10 p-6">
       <div className="max-w-4xl mx-auto">
@@ -39,7 +39,7 @@ const LogoutOthersDevice = async ({ searchParams }: Props) => {
           </p>
         </div>
 
-        <ForceLogout activeSession={activeSession ?? []} />
+        <ForceLogout activeSession={activeSession ?? []} newdeviceid={newDeviceId ?? ""} />
       </div>
     </div>
   );

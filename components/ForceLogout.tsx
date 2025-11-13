@@ -12,10 +12,11 @@ type prop = {
 };
 
 interface Session {
-  activeSession: prop[];
+  activeSession: prop[]; 
+  newdeviceid:string
 }
 
-const ForceLogout = ({ activeSession }: Session) => {
+const ForceLogout = ({ activeSession,newdeviceid }: Session) => {
   if (activeSession.length === 0) {
     return (
       <h1 className=" text-3xl text-gray-300">There is no active session</h1>

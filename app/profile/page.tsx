@@ -1,22 +1,46 @@
 import { auth0 } from "@/lib/auth0";
 import prisma from "@/lib/prisma";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
 const Profile = async () => {
   const session = await auth0.getSession();
+  const cookieStore=await cookies(); 
 
+  const deviceId=cookieStore.get("deviceId")?.value;
   if (!session?.user) {
     return redirect("/");
   }
   const user = await prisma.user.findUnique({
-    where: { email: session?.user.email },
-  });
-
+    where: { email: session?.user.email }, 
+    include:{sessions:true}
+  }); 
   if (!user?.phone) {
     return redirect("/completeprofile");
+  }   
+
+  if(deviceId){
+
+
+    const userLogsession=user.sessions.filter(s=>s.deviceId ===deviceId); 
+
+    if(userLogsession[0].status==="Logout"  || userLogsession[0].forecedreason){
+
+  return (
+    <>
+    <div>
+       <h1 className="text-3xl text-gray-300">You are forced to logout from this device</h1>  
+
+      <Link className="text-blue-500" href={"/logout"}>Logout</Link>
+    </div>
+    </>
+  )
+    }
   }
+
+
   return (
     <>
       <div className="flex items-center justify-center bg-neutral-900 h-screen  gap-2 w-full">

@@ -3,8 +3,7 @@ import { NextResponse } from "next/server";
 
 export const auth0 = new Auth0Client({ 
   async onCallback(error, context, session) { 
-    if(error){ 
-      console.log(error.cause,"cause"); 
+    if(error){  
       console.log(error)
     }
     if (session) { 
