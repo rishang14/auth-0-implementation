@@ -16,10 +16,6 @@ export default async function Home() {
         Welcome! Please log in to access your protected content.
       </h1>
       <LoginButton />  
-
-      {
-        user && <LogoutButton/>
-      }
     </div>
   );
 }

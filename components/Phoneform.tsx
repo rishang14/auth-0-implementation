@@ -1,12 +1,12 @@
 "use client";
 
-import { updatePhoneNo } from "@/lib/action";
+import { updatePhoneNo } from "@/lib/action/completeprofile";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export const PhoneForm = () => {
   const [error, setError] = useState<string | undefined>();
-  const [phoneNO, setPhoneNo] = useState<number | undefined>();
+  const [phoneNO, setPhoneNo] = useState<number>(123456789);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
