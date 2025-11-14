@@ -5,10 +5,14 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 interface Props {
-  searchParams: { newDeviceId?: string };
+  searchParams: { newDeviceId: string };
 }
 
-const LogoutOthersDevice = async ({ searchParams }: Props) => {
+const LogoutOthersDevice = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ newDeviceId?: string }>;
+}) => {
   const session = await auth0.getSession();
 
   if (!session?.user) {
@@ -24,8 +28,8 @@ const LogoutOthersDevice = async ({ searchParams }: Props) => {
     },
   });
 
-  const activeSession = user?.sessions.filter(s => s.status === "LogIn");
-  const {newDeviceId}= await searchParams 
+  const activeSession = user?.sessions.filter((s) => s.status === "LogIn");
+  const { newDeviceId } = await searchParams;
   return (
     <div className="min-h-screen bg-linear-to-br from-background to-muted/10 p-6">
       <div className="max-w-4xl mx-auto">
@@ -35,11 +39,15 @@ const LogoutOthersDevice = async ({ searchParams }: Props) => {
             Active Sessions
           </h1>
           <p className="text-gray-300">
-            Manage your active Login  across devices
+            Manage your active Login across devices
           </p>
         </div>
 
-        <ForceLogout activeSession={activeSession ?? []} newdeviceid={newDeviceId ?? ""} email={session.user.email ?? ""} />
+        <ForceLogout
+          activeSession={activeSession ?? []}
+          newdeviceid={newDeviceId ?? ""}
+          email={session.user.email ?? ""}
+        />
       </div>
     </div>
   );
