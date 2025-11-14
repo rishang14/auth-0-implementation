@@ -39,13 +39,12 @@ export const checkPage = async () => {
 
     return redirect("/completeprofile");
   }
-
   if (usreExist.sessions) {
     const getActiveSession = usreExist.sessions.filter(
       (s) => s.status === "LogIn"
     );
 
-    if (getActiveSession.length >= 3) {
+    if (getActiveSession.length >= Number(process.env.MAX_DEVICE)!) {
       return redirect(`/logoutolddevice?newDeviceId=${randomId}`);
     }
   }
@@ -67,8 +66,10 @@ export const handleForceLogout = async (
 ) => {
   try {
     if (!olddevice || !newDeviceId) {
-      return;
-    }
+      return {success:false};
+    }  
+
+    console.log("i am clicked")
     const Logout = await prisma.session.update({
       where: {
         deviceId: olddevice,
@@ -78,19 +79,22 @@ export const handleForceLogout = async (
         forecedreason: "Maximum Device Limit reached You are forced to logout",
       },
     });
-
+    console.log("Logout device",Logout)
     const session = await auth0.getSession();
     const user = await prisma.user.findFirst({
       where: { email: session?.user.email },
     });
-    await prisma.session.create({
+   const updatedsession= await prisma.session.create({
       data: {
         userId: user?.id as string,
         deviceId: newDeviceId,
         status: "LogIn",
       },
     });
-
-    return redirect("/profile");
-  } catch (error) {}
+     console.log("updatedsession",updatedsession);
+    return {success:true};
+  } catch (error) { 
+  console.log("something went wrong while forcing logout",error)
+  return {success:false}
+  }
 };

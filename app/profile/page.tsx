@@ -7,39 +7,41 @@ import React from "react";
 
 const Profile = async () => {
   const session = await auth0.getSession();
-  const cookieStore=await cookies(); 
+  const cookieStore = await cookies();
 
-  const deviceId=cookieStore.get("deviceId")?.value;
+  const deviceId = cookieStore.get("deviceId")?.value;
   if (!session?.user) {
     return redirect("/");
   }
   const user = await prisma.user.findUnique({
-    where: { email: session?.user.email }, 
-    include:{sessions:true}
-  }); 
+    where: { email: session?.user.email },
+    include: { sessions: true },
+  });
   if (!user?.phone) {
     return redirect("/completeprofile");
-  }   
-
-  if(deviceId){
-
-
-    const userLogsession=user.sessions.filter(s=>s.deviceId ===deviceId); 
-
-    if(userLogsession[0].status==="Logout"  || userLogsession[0].forecedreason){
-
-  return (
-    <>
-    <div>
-       <h1 className="text-3xl text-gray-300">You are forced to logout from this device</h1>  
-
-      <Link className="text-blue-500" href={"/logout"}>Logout</Link>
-    </div>
-    </>
-  )
-    }
   }
 
+  if (deviceId) {
+    const userLogsession = user.sessions.filter((s) => s.deviceId === deviceId);
+
+    if (
+      userLogsession[0].status === "Logout" ||
+      userLogsession[0].forecedreason
+    ) {
+      return (
+        <>
+          <div className=" flex-col flex items-center justify-center h-screen w-full">
+            <h1 className="text-3xl text-gray-300">
+              You are forced to logout from this device
+            </h1>
+            <Link className="text-blue-500" href={"/logout"}>
+              Logout
+            </Link>
+          </div>
+        </>
+      );
+    }
+  }
 
   return (
     <>
@@ -50,7 +52,7 @@ const Profile = async () => {
             {session?.user.picture ? (
               <img
                 className="object-cover object-center h-32"
-                src={session.user.picture}
+                src={session?.user.picture  ?? ""}
                 alt="profile picture"
               />
             ) : (

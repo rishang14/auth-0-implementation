@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+import { handleForceLogout } from "@/lib/action/check";
+import { redirect } from "next/navigation";
+import React, { useState } from "react";
 
 type prop = {
   id: string;
@@ -12,17 +15,44 @@ type prop = {
 };
 
 interface Session {
-  activeSession: prop[]; 
-  newdeviceid:string
+  activeSession: prop[];
+  newdeviceid: string;
 }
 
-const ForceLogout = ({ activeSession,newdeviceid }: Session) => {
+const ForceLogout = ({ activeSession, newdeviceid }: Session) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
   if (activeSession.length === 0) {
     return (
       <h1 className=" text-3xl text-gray-300">There is no active session</h1>
     );
   }
 
+  const handleLogoutClick = async (oldDeviceId: string) => {
+    setLoading(true);
+    try {
+      const {success} = await handleForceLogout(oldDeviceId, newdeviceid);  
+      console.log("res from the function handlelogout",success)
+      if(success){
+        return redirect("/profile");
+      }else{
+       return alert("Something went wrong while making user logout")
+      }
+    } catch (error){ 
+      console.log(error,"error");  
+      alert("Internal server Error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-full">
+        <p className="text-gray-200  text-xl ">You are alomost there</p>
+      </div>
+    );
+  }
   return (
     <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
       {activeSession.map((session) => (
@@ -92,7 +122,10 @@ const ForceLogout = ({ activeSession,newdeviceid }: Session) => {
 
           {/* Card Footer with Logout Button */}
           <div className="bg-muted/30 px-4 py-3 border-t border-border">
-            <button className="w-full px-4 py-2.5 bg-red-800/90 hover:bg-red-700 text-white font-medium rounded-md transition-all duration-200 text-sm group-hover:shadow-md">
+            <button
+              className="w-full cursor-pointer   px-4 py-2.5 bg-red-800/90 hover:bg-red-700 text-white font-medium rounded-md transition-all duration-200 text-sm group-hover:shadow-md"
+              onClick={async () => await handleLogoutClick(session.deviceId)}
+            >
               Logout from this Device
             </button>
           </div>

@@ -12,7 +12,9 @@ const Logout = () => {
     Logout();
   }, []);
 
-  return <p>You are alomst there</p>;
+  return <div className="flex h-screen w-full items-center justify-center">
+    <p className="text-2xl text-gray-300">You are alomst there</p>
+  </div>;
 };
 
 export default Logout;
