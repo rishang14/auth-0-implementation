@@ -35,7 +35,6 @@ const ForceLogout = ({ activeSession, newdeviceid,email }: Session) => {
       await handleForceLogout(oldDeviceId, newdeviceid,email);  
     } catch (error){ 
       console.log(error,"error");  
-      alert("Internal server Error");
     } finally {
       setLoading(false);
     }

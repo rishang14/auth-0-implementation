@@ -8,8 +8,7 @@ export const auth0 = new Auth0Client({
     }
     if (session) { 
       console.log("i am triggred")    
-  const baseUrl="http://localhost:3000"
-        return NextResponse.redirect(new URL(`${baseUrl}/check`));
+        return NextResponse.redirect(new URL(`${process.env.APP_BASE_URL}/check`));
       }
     
 

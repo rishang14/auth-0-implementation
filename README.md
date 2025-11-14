@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Auth0 Multi-Device Session Management & Forced Logout System
 
-## Getting Started
+## Overview
 
-First, run the development server:
+This project implements a **secure multi-device session management flow** using **Auth0**, **Next.js App Router**, and **Prisma**. The core idea is simple:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+> When a user logs in from a new device, they can choose to **log out other devices**, ensuring only one active trusted session at a time.
+
+This setup is ideal for applications where security is critical — banking apps, admin dashboards, productivity tools, etc.
+
+The project provides routes, logic, and database handling for safely detecting devices, managing multiple sessions, and force‑logging out previously active sessions.
+
+---
+
+## Key Features
+
+### 🔐 1. Multi-Device Session Tracking
+
+Each login creates a **session record** in the database with:
+
+* Device ID
+* Browser info
+* Status (LogIn / LogOut)
+* Timestamps
+
+### 🚫 2. Forced Logout of Old Devices
+
+When a user logs in on a new device, they are redirected to:
+
+```
+/logoutolddevice?newDeviceId=XYZ
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Where they can trigger a forced logout of older sessions.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🌐 3. Auth0 Secure Session Handling
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Uses:
 
-## Learn More
+* `auth0.getSession()` to fetch logged-in user
+* Redirects users who aren't authenticated
 
-To learn more about Next.js, take a look at the following resources:
+### 🧠 4. Clean Session Filtering
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+On login, the backend selects only sessions with `status === "LogIn"` and determines which ones should be invalidated.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Setup Instructions
+
+### 1. Install Dependencies
+
+```
+pm install
+```
+
+### 2. Setup Environment Variables
+
+```
+AUTH0_SECRET=...
+AUTH0_BASE_URL=...
+AUTH0_CLIENT_ID=...
+AUTH0_CLIENT_SECRET=...
+DATABASE_URL=...
+```
+
+### 3. Prisma Migrate
+
+```
+npx prisma migrate dev
+```
+
+### 4. Run
+
+```
+pm run dev
+```
+
+---
+
