@@ -24,7 +24,9 @@ export const handleLogout = async () => {
           status: "Logout",
         },
       });
-    }
+    }   
+
+    cookiestore.delete("deviceId");
    
   } catch (error) {
     console.log(error);

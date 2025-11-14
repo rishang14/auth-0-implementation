@@ -5,6 +5,7 @@ import prisma from "../prisma";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+
 export const checkPage = async () => {
   const session = await auth0.getSession();
   const randomId = uuidv4(); // random id
@@ -15,6 +16,7 @@ export const checkPage = async () => {
   }
 
   if (!session?.user.email || !session?.user.name) return;
+
   const usreExist = await prisma.user.findUnique({
     where: { email: session?.user.email },
     include: {
@@ -24,7 +26,10 @@ export const checkPage = async () => {
 
   cookiestore.set({
     name: "deviceId",
-    value: randomId,
+    value: randomId, 
+    httpOnly:true,
+    secure:true,
+    sameSite:'lax'
   });
 
   if (!usreExist) {
@@ -43,7 +48,9 @@ export const checkPage = async () => {
     const getActiveSession = usreExist.sessions.filter(
       (s) => s.status === "LogIn"
     );
-
+    console.log("session of users",usreExist.sessions);
+    console.log(process.env.MAX_DEVICE);  
+    console.log("length of active session",getActiveSession.length)
     if (getActiveSession.length >= Number(process.env.MAX_DEVICE)!) {
       return redirect(`/logoutolddevice?newDeviceId=${randomId}`);
     }
@@ -62,11 +69,11 @@ export const checkPage = async () => {
 
 export const handleForceLogout = async (
   olddevice: string,
-  newDeviceId: string
+  newDeviceId: string,
+  email:string
 ) => {
-  try {
-    if (!olddevice || !newDeviceId) {
-      return {success:false};
+    if (!olddevice || !newDeviceId || !email) {
+      return ;
     }  
 
     console.log("i am clicked")
@@ -80,9 +87,9 @@ export const handleForceLogout = async (
       },
     });
     console.log("Logout device",Logout)
-    const session = await auth0.getSession();
+ 
     const user = await prisma.user.findFirst({
-      where: { email: session?.user.email },
+      where: { email },
     });
    const updatedsession= await prisma.session.create({
       data: {
@@ -92,9 +99,5 @@ export const handleForceLogout = async (
       },
     });
      console.log("updatedsession",updatedsession);
-    return {success:true};
-  } catch (error) { 
-  console.log("something went wrong while forcing logout",error)
-  return {success:false}
-  }
+    return redirect("/profile");
 };

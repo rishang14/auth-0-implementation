@@ -16,10 +16,11 @@ type prop = {
 
 interface Session {
   activeSession: prop[];
-  newdeviceid: string;
+  newdeviceid: string; 
+  email:string
 }
 
-const ForceLogout = ({ activeSession, newdeviceid }: Session) => {
+const ForceLogout = ({ activeSession, newdeviceid,email }: Session) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   if (activeSession.length === 0) {
@@ -31,13 +32,7 @@ const ForceLogout = ({ activeSession, newdeviceid }: Session) => {
   const handleLogoutClick = async (oldDeviceId: string) => {
     setLoading(true);
     try {
-      const {success} = await handleForceLogout(oldDeviceId, newdeviceid);  
-      console.log("res from the function handlelogout",success)
-      if(success){
-        return redirect("/profile");
-      }else{
-       return alert("Something went wrong while making user logout")
-      }
+      await handleForceLogout(oldDeviceId, newdeviceid,email);  
     } catch (error){ 
       console.log(error,"error");  
       alert("Internal server Error");
@@ -124,7 +119,7 @@ const ForceLogout = ({ activeSession, newdeviceid }: Session) => {
           <div className="bg-muted/30 px-4 py-3 border-t border-border">
             <button
               className="w-full cursor-pointer   px-4 py-2.5 bg-red-800/90 hover:bg-red-700 text-white font-medium rounded-md transition-all duration-200 text-sm group-hover:shadow-md"
-              onClick={async () => await handleLogoutClick(session.deviceId)}
+              onClick={() => handleLogoutClick(session.deviceId)}
             >
               Logout from this Device
             </button>

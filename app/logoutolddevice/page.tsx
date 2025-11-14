@@ -39,7 +39,7 @@ const LogoutOthersDevice = async ({ searchParams }: Props) => {
           </p>
         </div>
 
-        <ForceLogout activeSession={activeSession ?? []} newdeviceid={newDeviceId ?? ""} />
+        <ForceLogout activeSession={activeSession ?? []} newdeviceid={newDeviceId ?? ""} email={session.user.email ?? ""} />
       </div>
     </div>
   );
